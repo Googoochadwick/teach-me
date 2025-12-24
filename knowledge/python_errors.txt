@@ -1,0 +1,175 @@
+Python Error and Exception Reference (Beginner–Intermediate)
+
+General Rules:
+- Python uses indentation to define code blocks.
+- Indentation must be consistent (spaces or tabs, not both).
+- Many errors stop the program before it runs.
+- Tracebacks show the error from bottom to top; the last line is the actual error.
+
+--------------------------------------------------
+
+Error: SyntaxError
+Meaning:
+- The Python interpreter found invalid syntax.
+
+Common Causes:
+- Missing colon ':' after if, for, while, def, or class.
+- Missing or extra parentheses, brackets, or quotes.
+- Incorrect indentation structure.
+
+How to Fix:
+- Check the syntax on the reported line.
+- Look for missing colons or unmatched symbols.
+- Ensure correct indentation.
+
+--------------------------------------------------
+
+Error: IndentationError
+Meaning:
+- The indentation level is incorrect or inconsistent.
+
+Common Causes:
+- Mixing tabs and spaces.
+- Incorrect indentation after a block statement.
+
+How to Fix:
+- Use consistent spaces for indentation.
+- Align code blocks correctly.
+
+--------------------------------------------------
+
+Error: NameError
+Meaning:
+- A variable or function name is not defined.
+
+Common Causes:
+- Misspelled variable or function name.
+- Using a variable before assigning a value.
+- Missing import statement.
+
+How to Fix:
+- Check spelling.
+- Define the variable before use.
+- Add the required import.
+
+--------------------------------------------------
+
+Error: TypeError
+Meaning:
+- An operation was applied to an object of an inappropriate type.
+
+Common Causes:
+- Adding or comparing incompatible types.
+- Calling a function with incorrect argument types.
+- Using a non-callable object as a function.
+
+How to Fix:
+- Check variable types.
+- Convert values to compatible types.
+- Verify function arguments.
+
+--------------------------------------------------
+
+Error: ValueError
+Meaning:
+- A function received an argument of the correct type but invalid value.
+
+Common Causes:
+- Converting invalid strings to numbers.
+- Passing out-of-range values.
+
+How to Fix:
+- Validate input values.
+- Use try-except to handle invalid input.
+
+--------------------------------------------------
+
+Error: IndexError
+Meaning:
+- A sequence index is out of range.
+
+Common Causes:
+- Accessing a list or tuple beyond its length.
+
+How to Fix:
+- Check sequence length.
+- Ensure index is within valid range.
+
+--------------------------------------------------
+
+Error: KeyError
+Meaning:
+- A dictionary key does not exist.
+
+Common Causes:
+- Accessing a missing dictionary key.
+
+How to Fix:
+- Check if the key exists.
+- Use dict.get() to avoid errors.
+
+--------------------------------------------------
+
+Error: AttributeError
+Meaning:
+- An object does not have the requested attribute or method.
+
+Common Causes:
+- Calling a method that does not exist.
+- Using the wrong object type.
+
+How to Fix:
+- Verify object type.
+- Check attribute or method names.
+
+--------------------------------------------------
+
+Error: ZeroDivisionError
+Meaning:
+- Division or modulo by zero was attempted.
+
+Common Causes:
+- Dividing by zero.
+- Using zero as a divisor.
+
+How to Fix:
+- Check divisor value.
+- Add conditions to prevent zero division.
+
+--------------------------------------------------
+
+Error: ImportError / ModuleNotFoundError
+Meaning:
+- A module could not be imported.
+
+Common Causes:
+- Missing module.
+- Incorrect module name.
+- Module not installed in the environment.
+
+How to Fix:
+- Check module name spelling.
+- Install missing modules.
+- Verify Python environment.
+
+--------------------------------------------------
+
+Error: FileNotFoundError
+Meaning:
+- A file operation failed because the file does not exist.
+
+Common Causes:
+- Incorrect file path.
+- Missing file.
+
+How to Fix:
+- Verify file path.
+- Ensure the file exists before opening.
+
+--------------------------------------------------
+
+Notes for Students:
+- Read the full traceback to understand where the error occurred.
+- The last line of the traceback shows the error type.
+- Use print statements or a debugger to inspect values.
+- Handle expected errors using try-except blocks.

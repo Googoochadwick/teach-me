@@ -1,5 +1,47 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import * as fs from 'fs';
+
+export function getKnowledgeText(
+    context: vscode.ExtensionContext
+): string {
+
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+        return '';
+    }
+
+    const languageId = editor.document.languageId;
+
+    let fileName: string | null = null;
+
+    switch (languageId) {
+        case 'c':
+            fileName = 'c_errors.txt';
+            break;
+        case 'cpp':
+            fileName = 'cpp_errors.txt';
+            break;
+        case 'python':
+            fileName = 'python_errors.txt';
+            break;
+        default:
+            return ''; // Unsupported language
+    }
+
+    const knowledgePath = path.join(
+        context.extensionPath,
+        'knowledge',
+        fileName
+    );
+
+    try {
+        return fs.readFileSync(knowledgePath, 'utf-8');
+    } catch (err) {
+        console.error('Failed to load knowledge file:', err);
+        return '';
+    }
+}
 
 let panel: vscode.WebviewPanel | undefined;
 
@@ -7,7 +49,7 @@ export function activate(context: vscode.ExtensionContext) {
     console.log('Error Analyzer extension is now active');
 
     // Register the webview provider for the sidebar
-    const provider = new ErrorAnalyzerViewProvider(context.extensionUri);
+    const provider = new ErrorAnalyzerViewProvider(context.extensionUri, context);
     
     context.subscriptions.push(
         vscode.window.registerWebviewViewProvider(
@@ -21,7 +63,10 @@ class ErrorAnalyzerViewProvider implements vscode.WebviewViewProvider {
     public static readonly viewType = 'errorAnalyzer.sidebarView';
     private _view?: vscode.WebviewView;
 
-    constructor(private readonly _extensionUri: vscode.Uri) {}
+    constructor(
+        private readonly _extensionUri: vscode.Uri,
+        private readonly _context: vscode.ExtensionContext
+    ) {}
 
     public resolveWebviewView(
         webviewView: vscode.WebviewView,
@@ -47,45 +92,49 @@ class ErrorAnalyzerViewProvider implements vscode.WebviewViewProvider {
     }
 
     private async _analyzeCurrentFile() {
-        if (!this._view) {
-            return;
-        }
-
-        const editor = vscode.window.activeTextEditor;
-        
-        if (!editor) {
-            this._view.webview.postMessage({
-                command: 'showResult',
-                text: 'No active file found. Please open a file first.'
-            });
-            return;
-        }
-
-        const document = editor.document;
-        const diagnostics = vscode.languages.getDiagnostics(document.uri);
-        
-        const errors = diagnostics.filter(d => d.severity === vscode.DiagnosticSeverity.Error);
-        
-        if (errors.length === 0) {
-            this._view.webview.postMessage({
-                command: 'showResult',
-                text: 'No errors found in the current file! 🎉'
-            });
-            return;
-        }
-
-        let errorContext = `File: ${path.basename(document.fileName)}\n\n`;
-        errors.forEach((err, idx) => {
-            const line = document.lineAt(err.range.start.line);
-            errorContext += `Error ${idx + 1}: ${err.message}\n`;
-            errorContext += `Line ${err.range.start.line + 1}: ${line.text.trim()}\n\n`;
-        });
-
-        this._view.webview.postMessage({
-            command: 'analyzeWithAI',
-            errorContext: errorContext
-        });
+    if (!this._view) {
+        return;
     }
+
+    const editor = vscode.window.activeTextEditor;
+    
+    if (!editor) {
+        this._view.webview.postMessage({
+            command: 'showResult',
+            text: 'No active file found. Please open a file first.'
+        });
+        return;
+    }
+
+    const document = editor.document;
+    const diagnostics = vscode.languages.getDiagnostics(document.uri);
+    
+    const errors = diagnostics.filter(d => d.severity === vscode.DiagnosticSeverity.Error);
+    
+    if (errors.length === 0) {
+        this._view.webview.postMessage({
+            command: 'showResult',
+            text: 'No errors found in the current file! 🎉'
+        });
+        return;
+    }
+
+    let errorContext = '';
+    errors.forEach((err, idx) => {
+        const line = document.lineAt(err.range.start.line);
+        errorContext += `Error ${idx + 1}: ${err.message}\n`;
+        errorContext += `Line ${err.range.start.line + 1}: ${line.text.trim()}\n\n`;
+    });
+
+    // Get knowledge text for the current language
+    const referenceText = getKnowledgeText(this._context);
+
+    this._view.webview.postMessage({
+        command: 'analyzeWithAI',
+        errorContext: errorContext,
+        referenceText: referenceText
+    });
+}
 
     private _getHtmlForWebview(webview: vscode.Webview) {
         return `<!DOCTYPE html>
@@ -265,21 +314,27 @@ class ErrorAnalyzerViewProvider implements vscode.WebviewViewProvider {
                         analyzeBtn.disabled = true;
                         statusEl.innerHTML = 'Analyzing...<span class="loading"></span>';
                         resultEl.textContent = 'Processing...';
-                        const prompt = \`Fix this programming error:
-                        Error: \${message.errorContext}
-                        \Solution:\`;
-                        
-                        const result = await generator(prompt, {
-                        max_new_tokens: 512,        // Changed from max_length
-                        min_length: 10,             // Force minimum output
-                        temperature: 0.3,           // Lower = more focused (was 0.7)
-                        top_p: 0.95,               // Slightly higher
-                        top_k: 50,                 // Add this - limits vocabulary
-                        repetition_penalty: 1.5,   // Higher = less repetition (critical!)
-                        no_repeat_ngram_size: 3,   // Prevent 3-word repetitions
+                                            
+                    const prompt = \`Analyze this programming error and provide a clear explanation.
+
+                    Error Details:
+                    \${message.errorContext}
+
+                    Reference Information:
+                    \${message.referenceText}
+
+                    Provide: 1) What caused the error, 2) How to fix it.\`;
+
+                    const result = await generator(prompt, {
+                        max_new_tokens: 50,        // Increased for more complete responses
+                        temperature: 0.7,           // Higher for more natural language
+                        top_p: 0.9,                 
+                        top_k: 40,                  
+                        repetition_penalty: 2.0,    // Higher to prevent repetition
+                        no_repeat_ngram_size: 4,    // Prevent 4-word repetitions
                         do_sample: true,
-                        num_beams: 2,              // Beam search for better quality
-                        early_stopping: true
+                        num_beams: 1,               // Faster, more natural output
+                        early_stopping: false
                     });
                         
                         const explanation = result[0].generated_text;

@@ -1,0 +1,120 @@
+C++ Compiler Error Reference (Beginner–Intermediate)
+
+General Rules:
+- Most C++ statements must end with a semicolon (;).
+- Many compiler errors are reported on the line *after* the real mistake.
+- One syntax error can cause many follow-up errors.
+- Fix the first error before fixing others.
+
+--------------------------------------------------
+
+Error: expected ';'
+Meaning:
+- The compiler expected a semicolon but did not find one.
+
+Common Causes:
+- Missing semicolon at the end of a statement.
+- Missing semicolon after a class or struct definition.
+- Missing closing brace '}' before the error line.
+
+How to Fix:
+- Check the line above the reported error.
+- Add a semicolon at the end of the statement.
+- Ensure braces are properly closed.
+
+--------------------------------------------------
+
+Error: control reaches end of non-void function
+Meaning:
+- A function that must return a value does not return one on all paths.
+
+Common Causes:
+- Missing return statement.
+- Conditional branches that do not all return a value.
+
+How to Fix:
+- Ensure every possible path returns a value.
+- Add a return statement at the end of the function.
+
+--------------------------------------------------
+
+Error: no matching function for call to
+Meaning:
+- A function was called with arguments that do not match any defined version.
+
+Common Causes:
+- Wrong number of arguments.
+- Incorrect argument types.
+- Function declared but not defined.
+
+How to Fix:
+- Check the function signature.
+- Ensure argument types and count match.
+- Verify the function is declared correctly.
+
+--------------------------------------------------
+
+Error: invalid conversion from 'type1' to 'type2'
+Meaning:
+- The code attempts to convert between incompatible types.
+
+Common Causes:
+- Assigning incompatible variable types.
+- Passing wrong argument types to a function.
+
+How to Fix:
+- Change the variable type.
+- Use an explicit cast if the conversion is valid.
+- Check function parameter types.
+
+--------------------------------------------------
+
+Error: expected '}' at end of input
+Meaning:
+- The compiler reached the end of the file but expected a closing brace.
+
+Common Causes:
+- Missing closing brace '}'.
+- Unmatched opening brace '{'.
+
+How to Fix:
+- Count opening and closing braces.
+- Ensure each '{' has a matching '}'.
+
+--------------------------------------------------
+
+Error: undeclared identifier / was not declared in this scope
+Meaning:
+- The variable or function name is unknown at that point in the code.
+
+Common Causes:
+- Misspelled variable or function name.
+- Variable used before declaration.
+- Missing include or namespace.
+
+How to Fix:
+- Check spelling.
+- Declare the variable before use.
+- Add the correct header or namespace.
+
+--------------------------------------------------
+
+Error: expected primary-expression
+Meaning:
+- The compiler expected a valid expression but found invalid syntax.
+
+Common Causes:
+- Extra or missing operators.
+- Empty parentheses.
+- Incorrect use of keywords.
+
+How to Fix:
+- Check the syntax around the error.
+- Ensure expressions are complete and valid.
+
+--------------------------------------------------
+
+Notes for Students:
+- Compiler error messages describe *what the compiler expected*, not always *what is wrong*.
+- The real mistake is often on the line before the reported error.
+- Fix errors from top to bottom.

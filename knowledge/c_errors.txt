@@ -1,0 +1,156 @@
+C Compiler Error Reference (Beginner–Intermediate)
+
+General Rules:
+- Most C statements must end with a semicolon (;).
+- The C compiler often reports errors on the line after the real mistake.
+- One syntax error can cause many follow-up errors.
+- Always fix the first reported error before others.
+
+--------------------------------------------------
+
+Error: expected ';'
+Meaning:
+- The compiler expected a semicolon but did not find one.
+
+Common Causes:
+- Missing semicolon at the end of a statement.
+- Missing semicolon after a struct definition.
+- Missing closing brace '}' before the error line.
+
+How to Fix:
+- Check the line above the reported error.
+- Add a semicolon at the end of the statement.
+- Ensure braces are properly closed.
+
+--------------------------------------------------
+
+Error: expected '}' at end of input
+Meaning:
+- The compiler reached the end of the file but expected a closing brace.
+
+Common Causes:
+- Missing closing brace '}'.
+- Unmatched opening brace '{'.
+
+How to Fix:
+- Count opening and closing braces.
+- Ensure each '{' has a matching '}'.
+
+--------------------------------------------------
+
+Error: implicit declaration of function
+Meaning:
+- A function is used without being declared first.
+- In modern C standards (C99 and later), this is an error.
+
+Common Causes:
+- Missing function prototype.
+- Missing header file.
+
+How to Fix:
+- Declare the function before use.
+- Include the correct header file.
+
+--------------------------------------------------
+
+Error: incompatible types when assigning
+Meaning:
+- A value is assigned to a variable of an incompatible type.
+
+Common Causes:
+- Assigning a pointer to a non-pointer variable.
+- Assigning different numeric types without casting.
+
+How to Fix:
+- Ensure both sides of the assignment have compatible types.
+- Use explicit casts only when safe.
+
+--------------------------------------------------
+
+Error: invalid operands to binary operator
+Meaning:
+- An operator was used with operands of incompatible types.
+
+Common Causes:
+- Using arithmetic operators on pointers.
+- Mixing incompatible types in expressions.
+
+How to Fix:
+- Check the types of both operands.
+- Use the correct operator for the data types.
+
+--------------------------------------------------
+
+Error: lvalue required as left operand of assignment
+Meaning:
+- The left side of an assignment must be a modifiable variable.
+
+Common Causes:
+- Assigning to a constant.
+- Assigning to an expression or function call.
+
+How to Fix:
+- Assign only to variables.
+- Remove assignments to non-modifiable expressions.
+
+--------------------------------------------------
+
+Error: array subscript is not an integer
+Meaning:
+- An array index is not of an integer type.
+
+Common Causes:
+- Using a pointer or float as an array index.
+
+How to Fix:
+- Use an integer type as the array index.
+
+--------------------------------------------------
+
+Error: too few arguments to function
+Meaning:
+- A function call does not provide enough arguments.
+
+Common Causes:
+- Missing parameters in the function call.
+- Incorrect function prototype.
+
+How to Fix:
+- Pass all required arguments.
+- Verify the function declaration.
+
+--------------------------------------------------
+
+Error: too many arguments to function
+Meaning:
+- A function call provides more arguments than expected.
+
+Common Causes:
+- Incorrect function prototype.
+- Calling the wrong function.
+
+How to Fix:
+- Match the function call to the declared signature.
+
+--------------------------------------------------
+
+Error: segmentation fault (runtime error)
+Meaning:
+- The program accessed invalid memory at runtime.
+
+Common Causes:
+- Dereferencing a NULL pointer.
+- Accessing memory out of bounds.
+- Using uninitialized pointers.
+
+How to Fix:
+- Initialize pointers before use.
+- Check array bounds.
+- Validate pointer values before dereferencing.
+
+--------------------------------------------------
+
+Notes for Students:
+- C does not perform automatic bounds checking.
+- Many runtime errors are not detected at compile time.
+- Compiler warnings are important and should not be ignored.
