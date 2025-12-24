@@ -1,0 +1,49 @@
+{
+  "name": "error-analyzer",
+  "displayName": "Error Analyzer with Local AI",
+  "description": "Analyze coding errors using a local Flan-T5 model",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "error-analyzer-sidebar",
+          "title": "Error Analyzer",
+          "icon": "$(bug)"
+        }
+      ]
+    },
+    "views": {
+      "error-analyzer-sidebar": [
+        {
+          "type": "webview",
+          "id": "errorAnalyzer.sidebarView",
+          "name": "AI Error Analysis"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.57.0",
+    "typescript": "^5.3.3"
+  }
+}
